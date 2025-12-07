@@ -1,0 +1,117 @@
+🟦 FULL EXPLANATION (Every Line)
+🔹 1. Debounce Function
+function debounce(func, delay) {
+
+
+func → the function you want to delay (e.g., searchAPI)
+
+delay → how long to wait after typing stops (500 ms, etc.)
+
+🔹 let timer;
+
+A variable to store the timer ID.
+
+🔹 Returned function
+return function (...args) {
+
+
+The returned function is what will actually run on the event.
+
+...args means: take all arguments passed to this function.
+
+If we do:
+
+debouncedSearch("apple")
+
+
+Then args = ["apple"]
+
+🔹 clearTimeout(timer);
+
+This is the most important part.
+
+Every time the user presses a key:
+
+previous timer is cancelled
+
+new timer is started
+
+This ensures the function runs only after typing stops.
+
+🔹 Start a new timer
+timer = setTimeout(() => {
+    func.apply(this, args);
+}, delay);
+
+
+setTimeout runs func after delay milliseconds
+
+.apply(this, args) ensures:
+
+this value stays correct
+
+arguments like "apple" are passed correctly
+
+If the user keeps typing, the timer keeps resetting → function never executes.
+
+Only when the user STOPS for 500ms, the function runs.
+
+🟦 2. The actual function we want to debounce
+function searchAPI(query) {
+    console.log("Calling server for:", query);
+}
+
+
+This simulates an API call.
+
+Before debounce → gets called many times
+After debounce → called once
+
+🟦 3. Using the Debounced Function
+const debouncedSearch = debounce(searchAPI, 500);
+
+
+We create a new function:
+
+debouncedSearch()
+
+
+This function:
+
+waits 500ms after last input
+
+then calls searchAPI
+
+Then we attach it to the input event:
+
+document.getElementById("search")
+    .addEventListener("input", function () {
+        debouncedSearch(this.value);
+    });
+
+🎉 WHAT WILL HAPPEN IN PRACTICE?
+
+User types:
+
+A P P L E
+
+
+Browser fires INPUT event 5 times → but debounce cancels the previous timer each time.
+
+Once user stops typing for 500ms, only then:
+
+Calling server for: apple
+
+🟢 You now have:
+
+✔ Full working debounce example
+✔ Separate HTML, CSS, JS
+✔ Explanation of every term
+✔ Understanding of how debounce controls function calls
+
+If you want, I can also give:
+
+✅ debounce + throttle difference
+✅ debounce in Angular (RxJS)
+✅ button click debounce
+Just ask!
